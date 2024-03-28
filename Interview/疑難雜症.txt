@@ -1,0 +1,49 @@
+1.體育
+賠率取錯欄做hotfix
+資料清檔、搬檔
+用相同語法在BAK環境下無法建SP，經查證後是因為少了TVP
+TVP:TVP（Table-Valued Parameters）允许在 SQL Server 中以表的形式传递参数给存储过程或函数，简化复杂数据类型的传递并提高性能。
+柱單語法 柱單表，柱單細像，UserInfo建立tmp表一個存所有柱單,依照柱單取得User,拆OBSPBet,OBSPBetSelection GROUP BY處理欄位合併   用STRING_AGG串接賽是明細的所有項目
+只要寫入暫存表的資料 ，有機會超過2000筆 請都使用 #暫存 不要使用 @暫存
+
+2.遊戲後台
+CDN
+先上傳AWS S3然後寫DB
+2.1 文字編輯器
+2.2 營運數據
+每小時，日营运，月营运，日人數，月人數sp
+
+3.新舊後台SSO(Single Sign On)
+ 3.1舊後台WCF  (前端silverlight+2個SERVICE main和bak)
+    舊後台利用 StackTrace 去抓取呼叫者的名字，即是頁面名稱，當做參數呼叫 Service 端
+    新後台的 Client 則在既定位置開好 Action 接收 SingleSignOn 請求，內容包含處理 token 驗證、在前端登入存儲 session 和導轉
+     <!--技術難點--> 原意是希望可以在瀏覽器上另開分頁到新後台，不過礙於只有 IE 支援 Silverlight 但 Serenity 不支援 IE ，因此在 IE 上而無法做到
+ 3.2 Google 身分驗證QRCODE
+
+
+4.新後台開發會議
+0. WebSV端 做出API接口 
+1. Sergen 工具
+2. XXColumn 調整欄位名、大小
+3. 置換 XXEndpoint 裡的邏輯，串接WebSV的API
+4. XXGrid & XXDialog 繼承底層
+5. 頁面客製化：
+  i. 客製Column
+  ii. 客製QuickFilter
+  iii. 客製Dialog
+  
+4.日常處理
+4.1 版控
+菲辦sit合進master
+和三方同步柱單異常
+難點:
+其他環境都正常除了live
+問題:
+設定檔少加http
+
+額外:
+踩過一次量太大導致大量erro之後去查才知道.net core預設執行序只有5，產出執行序速度太慢所導致，之後開250執行序解決，也不能開太大會影響系統
+
+4.2多request導致app閃退
+原因:01 Create物件有問題，每次app滑動都會建立一個新物件，美華一次多建一個，當使用者大量滑動時產出物件量太大導致報錯
+因為有打到我們的api有噴錯，先進行調整部分API能匿名呼叫減少驗證、以及取期號、投注項相關API使用MemoryCache，有減少客服回饋異常減少
